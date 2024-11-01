@@ -18,6 +18,7 @@
 #include <h3api.h>
 
 #include <fmgr.h> // PG_FUNCTION_ARGS
+#include <libpq/pqformat.h> // needed for send/recv functions
 
 #include "error.h"
 #include "type.h"
@@ -25,6 +26,8 @@
 /* conversion */
 PGDLLEXPORT PG_FUNCTION_INFO_V1(h3index_in);
 PGDLLEXPORT PG_FUNCTION_INFO_V1(h3index_out);
+PGDLLEXPORT PG_FUNCTION_INFO_V1(h3index_send);
+PGDLLEXPORT PG_FUNCTION_INFO_V1(h3index_recv);
 PGDLLEXPORT PG_FUNCTION_INFO_V1(h3index_to_bigint);
 PGDLLEXPORT PG_FUNCTION_INFO_V1(bigint_to_h3index);
 
@@ -49,6 +52,33 @@ h3index_out(PG_FUNCTION_ARGS)
 	h3_assert(h3ToString(h3, string, 17));
 
 	PG_RETURN_CSTRING(string);
+}
+
+Datum
+h3index_recv(PG_FUNCTION_ARGS)
+{
+	StringInfo	buf = (StringInfo) PG_GETARG_POINTER(0);
+	H3Index		h3;
+
+	const char *string = pq_getmsgstring(buf);
+	h3_assert(stringToH3(string, &h3));
+
+	PG_RETURN_POINTER(h3);
+}
+
+Datum
+h3index_send(PG_FUNCTION_ARGS)
+{
+	H3Index		h3 = PG_GETARG_H3INDEX(0);
+	char	   *string = palloc(17 * sizeof(char));
+
+	h3_assert(h3ToString(h3, string, 17));
+	StringInfoData buf;
+
+	pq_begintypsend(&buf);
+	pq_sendstring(&buf, string);
+
+	PG_RETURN_BYTEA_P(pq_endtypsend(&buf));
 }
 
 /* bigint conversion functions */

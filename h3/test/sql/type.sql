@@ -22,3 +22,11 @@ SELECT bool_and(:pentagon @> c) FROM (
 SELECT :asbigint = :hexagon::bigint;
 
 SELECT :hexagon = :asbigint::h3index;
+
+--
+-- TEST binary io
+--
+COPY (SELECT :hexagon) TO '/tmp/test.bin' (FORMAT binary);
+CREATE TEMPORARY TABLE tmp (val h3index);
+COPY tmp FROM '/tmp/test.bin' (FORMAT binary);
+SELECT val = :hexagon FROM tmp WHERE val = :hexagon;
