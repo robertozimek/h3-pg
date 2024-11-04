@@ -24,10 +24,10 @@ AS 'h3' LANGUAGE C IMMUTABLE STRICT PARALLEL SAFE;
 
 --@ internal
 CREATE OR REPLACE FUNCTION
-    h3index_send(h3index) RETURNS byta
+    h3index_send(h3index) RETURNS bytea
 AS 'h3' LANGUAGE C IMMUTABLE STRICT PARALLEL SAFE;
 
 ALTER TYPE h3index SET (
     RECEIVE        = h3index_recv,
     SEND           = h3index_send
-    );
+);

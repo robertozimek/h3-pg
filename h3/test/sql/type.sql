@@ -29,7 +29,7 @@ SELECT :hexagon = :asbigint::h3index;
 CREATE OR REPLACE FUNCTION copy_to_and_from_file(index h3index) RETURNS BOOLEAN LANGUAGE PLPGSQL AS
 $$
 DECLARE
-    result BOOL;
+result BOOL;
 BEGIN
     CREATE TEMPORARY TABLE from_temp (val h3index);
     INSERT INTO from_temp (val) VALUES (index);
@@ -40,15 +40,15 @@ BEGIN
         WHERE name = 'dynamic_shared_memory_type'
     )
     THEN
-        COPY (SELECT val FROM from_temp) TO 'D:\a\h3-pg\test.bin' (FORMAT binary);
-        COPY to_tmp FROM 'D:\a\h3-pg\test.bin' (FORMAT binary);
+        COPY (SELECT val FROM from_temp) TO 'C:\Windows\Temp\test.bin' (FORMAT binary);
+        COPY to_tmp FROM 'C:\Windows\Temp\test.bin' (FORMAT binary);
     ELSE
         COPY (SELECT val FROM from_temp) TO '/tmp/test.bin' (FORMAT binary);
         COPY to_tmp FROM '/tmp/test.bin' (FORMAT binary);
     END IF;
 
     SELECT val = index into result FROM to_tmp WHERE val = index;
-    RETURN result;
+RETURN result;
 END;
 $$;
 SELECT copy_to_and_from_file(:hexagon);

@@ -58,25 +58,18 @@ Datum
 h3index_recv(PG_FUNCTION_ARGS)
 {
 	StringInfo	buf = (StringInfo) PG_GETARG_POINTER(0);
-	H3Index		h3;
 
-	const char *string = pq_getmsgstring(buf);
-	h3_assert(stringToH3(string, &h3));
-
-	PG_RETURN_POINTER(h3);
+	PG_RETURN_POINTER(pq_getmsgint64(buf));
 }
 
 Datum
 h3index_send(PG_FUNCTION_ARGS)
 {
 	H3Index		h3 = PG_GETARG_H3INDEX(0);
-	char	   *string = palloc(17 * sizeof(char));
-
-	h3_assert(h3ToString(h3, string, 17));
 	StringInfoData buf;
 
 	pq_begintypsend(&buf);
-	pq_sendstring(&buf, string);
+	pq_sendint64(&buf, h3);
 
 	PG_RETURN_BYTEA_P(pq_endtypsend(&buf));
 }
