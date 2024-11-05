@@ -59,7 +59,7 @@ h3index_recv(PG_FUNCTION_ARGS)
 {
 	StringInfo	buf = (StringInfo) PG_GETARG_POINTER(0);
 
-	PG_RETURN_POINTER(pq_getmsgint64(buf));
+	PG_RETURN_H3INDEX(pq_getmsgint64(buf));
 }
 
 Datum

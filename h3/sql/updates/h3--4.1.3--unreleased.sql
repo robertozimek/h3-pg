@@ -28,6 +28,6 @@ CREATE OR REPLACE FUNCTION
 AS 'h3' LANGUAGE C IMMUTABLE STRICT PARALLEL SAFE;
 
 ALTER TYPE h3index SET (
-    RECEIVE        = h3index_recv,
-    SEND           = h3index_send
+    RECEIVE = h3index_recv,
+    SEND    = h3index_send
 );
