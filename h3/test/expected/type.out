@@ -49,8 +49,8 @@ CREATE FUNCTION h3_test_binary_io() RETURNS boolean LANGUAGE PLPGSQL AS $$
         -- base temp dir on platform
         IF (SELECT setting = 'windows' FROM pg_catalog.pg_file_settings WHERE name = 'dynamic_shared_memory_type')
         THEN
-            COPY h3_test_binary_send TO '%localappdata%\Temp\h3_test_binary.bin' (FORMAT binary);
-            COPY h3_test_binary_recv FROM '%localappdata%\Temp\h3_test_binary.bin' (FORMAT binary);
+            COPY h3_test_binary_send TO 'C:\Windows\Temp\h3_test_binary.bin' (FORMAT binary);
+            COPY h3_test_binary_recv FROM 'C:\Windows\Temp\h3_test_binary.bin' (FORMAT binary);
         ELSE
             COPY h3_test_binary_send TO '/tmp/h3_test_binary.bin' (FORMAT binary);
             COPY h3_test_binary_recv FROM '/tmp/h3_test_binary.bin' (FORMAT binary);
